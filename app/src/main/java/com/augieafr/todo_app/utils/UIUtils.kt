@@ -23,6 +23,5 @@ fun dueDateToDeadline(dueDate: String): ToDoDeadline {
                 sdf.format(endDate)
             }}")
         }
-
     }
 }
