@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
-import com.augieafr.todo_app.ui.component.ToDoListScreen
+import com.augieafr.todo_app.todolist.ToDoListScreen
 import com.augieafr.todo_app.ui.theme.TODOAppTheme
 
 class MainActivity : ComponentActivity() {
