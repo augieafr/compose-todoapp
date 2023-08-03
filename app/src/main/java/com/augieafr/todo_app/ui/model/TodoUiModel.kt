@@ -11,7 +11,7 @@ data class TodoUiModel(
     val dueDate: String,
     val deadLine: ToDoDeadline,
     val description: String,
-    var isDone: Boolean
+    val isDone: Boolean
 ) {
     companion object {
         fun generateDummyTodoList(): ArrayList<TodoUiModel> {
