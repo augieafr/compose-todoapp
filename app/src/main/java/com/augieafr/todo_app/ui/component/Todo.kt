@@ -125,4 +125,6 @@ sealed class ToDoEvent {
     class Edit(val todoUiModel: TodoUiModel) : ToDoEvent()
     class Done(val isDone: Boolean) : ToDoEvent()
     object Add : ToDoEvent()
+    class SaveTodo(val id: Int?, val title: String, val description: String, val dueDate: String) :
+        ToDoEvent()
 }
