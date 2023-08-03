@@ -35,7 +35,7 @@ fun AddEditTodoDialog(
     modifier: Modifier = Modifier,
     event: ToDoEvent,
     onDismissRequest: () -> Unit,
-    onSaveClicked: (title: String, description: String, dueDate: String) -> Unit
+    onSaveClicked: (id: Int?, title: String, description: String, dueDate: String) -> Unit
 ) {
     Dialog(
         onDismissRequest = {
@@ -101,7 +101,9 @@ fun AddEditTodoDialog(
                         val title = textFieldValues[0]
                         val description = textFieldValues[1]
                         val dueDate = textFieldValues[2].changeDatePattern("MM-dd-yyyy", "yyyyMMdd")
-                        onSaveClicked(title, description, dueDate)
+                        val id = todoUiModel?.id
+                        onDismissRequest()
+                        onSaveClicked(id, title, description, dueDate)
                     }) {
                         Text(text = "Save")
                     }
