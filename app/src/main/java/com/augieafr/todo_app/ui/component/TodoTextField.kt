@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 fun TodoTextField(
     value: String,
     label: String,
+    lines: Int = 1,
     isDateTextField: Boolean = false,
     onValueChange: (String) -> Unit
 ) {
@@ -56,6 +57,8 @@ fun TodoTextField(
             OutlinedTextField(
                 modifier = Modifier
                     .weight(0.75F),
+                maxLines = lines,
+                minLines = lines,
                 value = value,
                 readOnly = true,
                 onValueChange = {
@@ -87,6 +90,8 @@ fun TodoTextField(
     } else {
         OutlinedTextField(
             value = value,
+            maxLines = lines,
+            minLines = lines,
             onValueChange = {
                 onValueChange(it)
                 isError.value = it.isEmpty()

@@ -83,7 +83,8 @@ fun AddEditTodoDialog(
                 Spacer(modifier = Modifier.size(8.dp))
                 TodoTextField(
                     value = textFieldValues[1],
-                    label = "Description"
+                    label = "Description",
+                    lines = 4,
                 ) {
                     textFieldValues[1] = it
                 }
