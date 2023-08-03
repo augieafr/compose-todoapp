@@ -20,10 +20,8 @@ class MainActivity : ComponentActivity() {
             TODOAppTheme {
                 ToDoListScreen(
                     modifier = Modifier.fillMaxSize(),
-                    todoList = viewModel.listTodo,
-                    onTodoEvent = { event, index ->
-                        viewModel.todoEventHandler(event, index)
-                    })
+                    viewModel = viewModel
+                )
             }
 
         }
