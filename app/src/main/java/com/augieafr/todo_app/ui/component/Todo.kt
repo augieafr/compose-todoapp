@@ -57,7 +57,7 @@ fun ToDo(
     }
 
     Card(
-        modifier = modifier.clickable { onTodoEvent.invoke(ToDoEvent.Detail) },
+        modifier = modifier.clickable { onTodoEvent.invoke(ToDoEvent.Edit(todoModel)) },
         colors = CardDefaults.cardColors(
             containerColor = cardColor
         )
@@ -122,7 +122,7 @@ fun ToDo(
 
 sealed class ToDoEvent {
     object Delete : ToDoEvent()
-    object Detail : ToDoEvent()
+    class Edit(val todoUiModel: TodoUiModel) : ToDoEvent()
     class Done(val isDone: Boolean) : ToDoEvent()
     object Add : ToDoEvent()
 }
