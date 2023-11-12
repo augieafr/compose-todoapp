@@ -18,15 +18,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.augieafr.todo_app.ui.component.text_field.TodoTextField
+import com.augieafr.todo_app.ui.component.text_field.rememberTodoTextFieldState
 import com.augieafr.todo_app.ui.model.TodoUiModel
 import com.augieafr.todo_app.utils.changeDatePattern
 
@@ -46,7 +46,6 @@ fun AddEditTodoDialog(
             modifier = modifier,
             color = MaterialTheme.colorScheme.primaryContainer
         ) {
-
             val todoUiModel: TodoUiModel? = when (event) {
                 is ToDoEvent.Edit -> {
                     event.todoUiModel
@@ -55,20 +54,19 @@ fun AddEditTodoDialog(
                 else -> null
             }
 
-            val textFieldValues = remember {
-                mutableStateListOf(
-                    todoUiModel?.title.orEmpty(),
-                    todoUiModel?.description.orEmpty(),
-                    todoUiModel?.dueDate.changeDatePattern(
-                        sourcePattern = "yyyyMMdd",
-                        targetPattern = "MM-dd-yyyy"
-                    )
+            val titleInputState = rememberTodoTextFieldState(todoUiModel?.title.orEmpty())
+            val descriptionInputState =
+                rememberTodoTextFieldState(todoUiModel?.description.orEmpty())
+            val dueDateInputState = rememberTodoTextFieldState(
+                todoUiModel?.dueDate.changeDatePattern(
+                    sourcePattern = "yyyyMMdd",
+                    targetPattern = "MM-dd-yyyy"
                 )
-            }
+            )
 
             val hasError = remember {
                 derivedStateOf {
-                    textFieldValues.hasError()
+                    titleInputState.isError || descriptionInputState.isError || dueDateInputState.isError
                 }
             }
 
@@ -77,31 +75,29 @@ fun AddEditTodoDialog(
                     onDismissRequest()
                 }
                 Spacer(modifier = Modifier.size(16.dp))
-                TodoTextField(value = textFieldValues[0], label = "Title") {
-                    textFieldValues[0] = it
-                }
+                TodoTextField(
+                    state = titleInputState,
+                    label = "Title"
+                )
                 Spacer(modifier = Modifier.size(8.dp))
                 TodoTextField(
-                    value = textFieldValues[1],
+                    state = descriptionInputState,
                     label = "Description",
                     lines = 4,
-                ) {
-                    textFieldValues[1] = it
-                }
+                )
                 Spacer(modifier = Modifier.size(8.dp))
                 TodoTextField(
-                    value = textFieldValues[2],
+                    state = dueDateInputState,
                     label = "Due date",
                     isDateTextField = true,
-                ) {
-                    textFieldValues[2] = it
-                }
+                )
                 Spacer(modifier = Modifier.size(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     Button(enabled = !hasError.value, onClick = {
-                        val title = textFieldValues[0]
-                        val description = textFieldValues[1]
-                        val dueDate = textFieldValues[2].changeDatePattern("MM-dd-yyyy", "yyyyMMdd")
+                        val title = titleInputState.text
+                        val description = descriptionInputState.text
+                        val dueDate =
+                            dueDateInputState.text.changeDatePattern("MM-dd-yyyy", "yyyyMMdd")
                         val id = todoUiModel?.id
                         onDismissRequest()
                         onSaveClicked(id, title, description, dueDate)
@@ -112,13 +108,6 @@ fun AddEditTodoDialog(
             }
         }
     }
-}
-
-private fun SnapshotStateList<String>.hasError(): Boolean {
-    for (text in this) {
-        if (text.isEmpty()) return true
-    }
-    return false
 }
 
 @Composable
