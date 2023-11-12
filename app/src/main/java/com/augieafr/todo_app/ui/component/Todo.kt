@@ -29,8 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.augieafr.todo_app.todolist.ListTodoScreenEvent
 import com.augieafr.todo_app.ui.model.ToDoDeadline
-import com.augieafr.todo_app.ui.model.TodoEvent
 
 
 @Composable
@@ -40,7 +40,7 @@ fun Todo(
     isDone: Boolean,
     deadline: ToDoDeadline,
     modifier: Modifier = Modifier,
-    onTodoEvent: (TodoEvent) -> Unit
+    onTodoEvent: (ListTodoScreenEvent) -> Unit
 ) {
     val cardColor: Color
     val textColor: Color
@@ -61,7 +61,7 @@ fun Todo(
     }
 
     Card(
-        modifier = modifier.clickable { onTodoEvent(TodoEvent.Edit) },
+        modifier = modifier.clickable { onTodoEvent(ListTodoScreenEvent.Edit) },
         colors = CardDefaults.cardColors(
             containerColor = cardColor
         )
@@ -76,7 +76,7 @@ fun Todo(
             Checkbox(
                 modifier = Modifier.size(24.dp),
                 checked = isDone,
-                onCheckedChange = { onTodoEvent.invoke(TodoEvent.Done(it)) })
+                onCheckedChange = { onTodoEvent.invoke(ListTodoScreenEvent.Done(it)) })
             Spacer(modifier = Modifier.size(8.dp))
             VerticalDivider(
                 Modifier
@@ -100,7 +100,7 @@ fun Todo(
                 modifier = Modifier
                     .align(Alignment.Top)
                     .clickable {
-                        onTodoEvent.invoke(TodoEvent.Delete)
+                        onTodoEvent.invoke(ListTodoScreenEvent.Delete)
                     },
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete button",
