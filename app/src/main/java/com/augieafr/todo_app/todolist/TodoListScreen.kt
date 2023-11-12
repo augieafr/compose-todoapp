@@ -1,22 +1,28 @@
 package com.augieafr.todo_app.todolist
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.augieafr.todo_app.MainViewModel
 import com.augieafr.todo_app.ui.component.AddEditTodoDialog
 import com.augieafr.todo_app.ui.component.ToDo
@@ -31,7 +37,13 @@ fun ToDoListScreen(
 
     // A surface container using the 'background' color from the theme
     Scaffold(modifier = modifier, topBar = {
-        TopAppBar(title = { Text(text = "ToDo App") })
+        TopAppBar(title = { Text(text = "Todo App") }, actions = {
+            Icon(
+                modifier = Modifier.padding(end = 8.dp),
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "About me"
+            )
+        })
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
             viewModel.todoEventHandler(0, null, TodoEvent.Add)
@@ -40,23 +52,38 @@ fun ToDoListScreen(
         }
     }) { paddingValues ->
 
-        LazyColumn(
-            modifier = Modifier.padding(paddingValues),
-        ) {
-            itemsIndexed(viewModel.listTodo) { index, todo ->
-                ToDo(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .height(IntrinsicSize.Max),
-                    title = todo.title,
-                    description = todo.description,
-                    isDone = todo.isDone,
-                    deadline = todo.deadLine,
-                    onTodoEvent = { event ->
-                        viewModel.todoEventHandler(index, todo.id, event)
-                    }
+        if (viewModel.listTodo.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    fontSize = 32.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = "No Todo"
                 )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.padding(paddingValues),
+            ) {
+                itemsIndexed(viewModel.listTodo) { index, todo ->
+                    ToDo(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .height(IntrinsicSize.Max),
+                        title = todo.title,
+                        description = todo.description,
+                        isDone = todo.isDone,
+                        deadline = todo.deadLine,
+                        onTodoEvent = { event ->
+                            viewModel.todoEventHandler(index, todo.id, event)
+                        }
+                    )
+                }
             }
         }
 
