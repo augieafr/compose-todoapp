@@ -40,7 +40,6 @@ fun TodoTextField(
             minLines = lines,
             onValueChange = {
                 state.text = it
-                state.isError = it.isEmpty()
             },
             enabled = !isDateTextField,
             isError = state.isError,
@@ -62,7 +61,6 @@ fun TodoTextField(
             onDismissRequest = { isShowDatePickerDialog = false },
             onSaveButtonClick = {
                 state.text = it
-                state.isError = it.isEmpty()
                 isShowDatePickerDialog = false
             })
     }
