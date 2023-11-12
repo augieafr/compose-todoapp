@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.augieafr.todo_app.MainViewModel
 import com.augieafr.todo_app.ui.component.AddEditTodoDialog
 import com.augieafr.todo_app.ui.component.ToDo
-import com.augieafr.todo_app.ui.component.ToDoEvent
+import com.augieafr.todo_app.ui.component.TodoEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +34,7 @@ fun ToDoListScreen(
         TopAppBar(title = { Text(text = "ToDo App") })
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
-            viewModel.todoEventHandler(0, ToDoEvent.Add)
+            viewModel.todoEventHandler(0, TodoEvent.Add)
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
         }
@@ -68,7 +68,7 @@ fun ToDoListScreen(
                 onSaveClicked = { id, title, description, dueDate ->
                     viewModel.todoEventHandler(
                         0,
-                        ToDoEvent.SaveTodo(id, title, description, dueDate)
+                        TodoEvent.SaveTodo(id, title, description, dueDate)
                     )
                 }
             )

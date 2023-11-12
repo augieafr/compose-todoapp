@@ -33,7 +33,7 @@ import com.augieafr.todo_app.utils.changeDatePattern
 @Composable
 fun AddEditTodoDialog(
     modifier: Modifier = Modifier,
-    event: ToDoEvent,
+    event: TodoEvent,
     onDismissRequest: () -> Unit,
     onSaveClicked: (id: Int?, title: String, description: String, dueDate: String) -> Unit
 ) {
@@ -47,7 +47,7 @@ fun AddEditTodoDialog(
             color = MaterialTheme.colorScheme.primaryContainer
         ) {
             val todoUiModel: TodoUiModel? = when (event) {
-                is ToDoEvent.Edit -> {
+                is TodoEvent.Edit -> {
                     event.todoUiModel
                 }
 

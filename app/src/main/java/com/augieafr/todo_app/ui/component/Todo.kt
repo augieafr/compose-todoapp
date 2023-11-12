@@ -11,16 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +35,7 @@ import com.augieafr.todo_app.ui.model.TodoUiModel
 fun ToDo(
     todoModel: TodoUiModel,
     modifier: Modifier = Modifier,
-    onTodoEvent: (ToDoEvent) -> Unit
+    onTodoEvent: (TodoEvent) -> Unit
 ) {
     val cardColor: Color
     val textColor: Color
@@ -57,7 +56,7 @@ fun ToDo(
     }
 
     Card(
-        modifier = modifier.clickable { onTodoEvent.invoke(ToDoEvent.Edit(todoModel)) },
+        modifier = modifier.clickable { onTodoEvent.invoke(TodoEvent.Edit(todoModel)) },
         colors = CardDefaults.cardColors(
             containerColor = cardColor
         )
@@ -72,12 +71,12 @@ fun ToDo(
             Checkbox(
                 modifier = Modifier.size(24.dp),
                 checked = todoModel.isDone,
-                onCheckedChange = { onTodoEvent.invoke(ToDoEvent.Done(it)) })
+                onCheckedChange = { onTodoEvent.invoke(TodoEvent.Done(it)) })
             Spacer(modifier = Modifier.size(8.dp))
-            Divider(
+            VerticalDivider(
                 Modifier
-                    .width(1.dp)
-                    .fillMaxHeight(), color = todoModel.deadLine.getOnBackgroundColor()
+                    .fillMaxHeight(), color = todoModel.deadLine.getOnBackgroundColor(),
+                thickness = 1.dp
             )
             Spacer(modifier = Modifier.size(8.dp))
             Column(Modifier.weight(1f)) {
@@ -96,7 +95,7 @@ fun ToDo(
                 modifier = Modifier
                     .align(Alignment.Top)
                     .clickable {
-                        onTodoEvent.invoke(ToDoEvent.Delete)
+                        onTodoEvent.invoke(TodoEvent.Delete)
                     },
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete button",
@@ -120,11 +119,11 @@ fun ToDo(
     }
 }
 
-sealed class ToDoEvent {
-    object Delete : ToDoEvent()
-    class Edit(val todoUiModel: TodoUiModel) : ToDoEvent()
-    class Done(val isDone: Boolean) : ToDoEvent()
-    object Add : ToDoEvent()
+sealed class TodoEvent {
+    data object Delete : TodoEvent()
+    class Edit(val todoUiModel: TodoUiModel) : TodoEvent()
+    class Done(val isDone: Boolean) : TodoEvent()
+    data object Add : TodoEvent()
     class SaveTodo(val id: Int?, val title: String, val description: String, val dueDate: String) :
-        ToDoEvent()
+        TodoEvent()
 }

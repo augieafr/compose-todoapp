@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.augieafr.todo_app.data.repository.TodoRepository
-import com.augieafr.todo_app.ui.component.ToDoEvent
+import com.augieafr.todo_app.ui.component.TodoEvent
 import com.augieafr.todo_app.ui.model.TodoUiModel
 import com.augieafr.todo_app.utils.dueDateToDeadline
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,8 +20,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val repository: TodoRepository) : ViewModel() {
 
     val listTodo = mutableStateListOf<TodoUiModel>()
-    var isShowAddEditTodo: MutableState<ToDoEvent?> = mutableStateOf(null)
-
+    var isShowAddEditTodo: MutableState<TodoEvent?> = mutableStateOf(null)
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getTodos().collectLatest {
@@ -33,28 +32,28 @@ class MainViewModel @Inject constructor(private val repository: TodoRepository) 
     }
 
     // later change implementation with repository
-    fun todoEventHandler(index: Int, toDoEvent: ToDoEvent) = viewModelScope.launch {
+    fun todoEventHandler(index: Int, toDoEvent: TodoEvent) = viewModelScope.launch {
         when (toDoEvent) {
-            ToDoEvent.Delete -> {
+            TodoEvent.Delete -> {
                 repository.deleteTodo(listTodo[index])
                 listTodo.removeAt(index)
             }
 
-            is ToDoEvent.Edit -> {
-                isShowAddEditTodo.value = ToDoEvent.Edit(toDoEvent.todoUiModel)
+            is TodoEvent.Edit -> {
+                isShowAddEditTodo.value = TodoEvent.Edit(toDoEvent.todoUiModel)
             }
 
-            is ToDoEvent.Done -> {
+            is TodoEvent.Done -> {
                 val updatedTodo = listTodo[index].copy(isDone = toDoEvent.isDone)
                 listTodo[index] = updatedTodo
                 repository.addEditTodo(updatedTodo)
             }
 
-            is ToDoEvent.Add -> {
-                isShowAddEditTodo.value = ToDoEvent.Add
+            is TodoEvent.Add -> {
+                isShowAddEditTodo.value = TodoEvent.Add
             }
 
-            is ToDoEvent.SaveTodo -> {
+            is TodoEvent.SaveTodo -> {
                 with(toDoEvent) {
 
                     id?.let { id ->
