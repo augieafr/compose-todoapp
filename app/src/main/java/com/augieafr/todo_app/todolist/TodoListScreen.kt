@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.augieafr.todo_app.MainViewModel
 import com.augieafr.todo_app.ui.component.AddEditTodoDialog
-import com.augieafr.todo_app.ui.component.ToDo
+import com.augieafr.todo_app.ui.component.Todo
 import com.augieafr.todo_app.ui.model.TodoEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +71,7 @@ fun ToDoListScreen(
                 modifier = Modifier.padding(paddingValues),
             ) {
                 itemsIndexed(viewModel.listTodo) { index, todo ->
-                    ToDo(
+                    Todo(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
