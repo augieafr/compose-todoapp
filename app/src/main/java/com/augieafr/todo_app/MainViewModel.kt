@@ -1,12 +1,13 @@
 package com.augieafr.todo_app
 
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.augieafr.todo_app.data.repository.TodoRepository
-import com.augieafr.todo_app.ui.component.TodoEvent
+import com.augieafr.todo_app.ui.model.TodoEvent
 import com.augieafr.todo_app.ui.model.TodoUiModel
 import com.augieafr.todo_app.utils.dueDateToDeadline
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,10 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(private val repository: TodoRepository) : ViewModel() {
 
     val listTodo = mutableStateListOf<TodoUiModel>()
-    var isShowAddEditTodo: MutableState<TodoEvent?> = mutableStateOf(null)
+
+    // first argument is to show/hide the dialog, second argument is to determine dialog type (edit/add)
+    var isShowAddEditTodo by mutableStateOf(Pair(false, false))
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getTodos().collectLatest {
@@ -32,30 +36,21 @@ class MainViewModel @Inject constructor(private val repository: TodoRepository) 
     }
 
     // later change implementation with repository
-    fun todoEventHandler(index: Int, toDoEvent: TodoEvent) = viewModelScope.launch {
-        when (toDoEvent) {
+    fun todoEventHandler(index: Int, id: Int?, todoEvent: TodoEvent) = viewModelScope.launch {
+        when (todoEvent) {
             TodoEvent.Delete -> {
                 repository.deleteTodo(listTodo[index])
                 listTodo.removeAt(index)
             }
 
-            is TodoEvent.Edit -> {
-                isShowAddEditTodo.value = TodoEvent.Edit(toDoEvent.todoUiModel)
-            }
-
             is TodoEvent.Done -> {
-                val updatedTodo = listTodo[index].copy(isDone = toDoEvent.isDone)
+                val updatedTodo = listTodo[index].copy(isDone = todoEvent.isDone)
                 listTodo[index] = updatedTodo
                 repository.addEditTodo(updatedTodo)
             }
 
-            is TodoEvent.Add -> {
-                isShowAddEditTodo.value = TodoEvent.Add
-            }
-
             is TodoEvent.SaveTodo -> {
-                with(toDoEvent) {
-
+                with(todoEvent) {
                     id?.let { id ->
                         val todo = listTodo.single {
                             it.id == id
@@ -80,8 +75,17 @@ class MainViewModel @Inject constructor(private val repository: TodoRepository) 
                         val newId = repository.addEditTodo(todo)
                         listTodo.add(0, todo.copy(id = newId.toInt()))
                     }
-
                 }
+            }
+
+            TodoEvent.Add -> {
+                // TODO : change implementation with goto add screen
+                isShowAddEditTodo = Pair(true, false)
+            }
+
+            TodoEvent.Edit -> {
+                // TODO : change implementation with goto detail screen
+                isShowAddEditTodo = Pair(true, true)
             }
         }
     }

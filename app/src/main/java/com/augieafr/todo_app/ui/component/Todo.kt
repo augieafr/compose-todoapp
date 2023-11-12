@@ -28,12 +28,16 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import com.augieafr.todo_app.ui.model.TodoUiModel
+import com.augieafr.todo_app.ui.model.ToDoDeadline
+import com.augieafr.todo_app.ui.model.TodoEvent
 
 
 @Composable
 fun ToDo(
-    todoModel: TodoUiModel,
+    title: String,
+    description: String,
+    isDone: Boolean,
+    deadline: ToDoDeadline,
     modifier: Modifier = Modifier,
     onTodoEvent: (TodoEvent) -> Unit
 ) {
@@ -41,14 +45,14 @@ fun ToDo(
     val textColor: Color
     val textDecoration: TextDecoration
 
-    if (todoModel.isDone) {
+    if (isDone) {
         with(MaterialTheme.colorScheme) {
             cardColor = surfaceVariant
             textColor = onSurfaceVariant
         }
         textDecoration = TextDecoration.LineThrough
     } else {
-        with(todoModel.deadLine) {
+        with(deadline) {
             cardColor = getBackgroundColor()
             textColor = getOnBackgroundColor()
         }
@@ -56,7 +60,7 @@ fun ToDo(
     }
 
     Card(
-        modifier = modifier.clickable { onTodoEvent.invoke(TodoEvent.Edit(todoModel)) },
+        modifier = modifier.clickable { onTodoEvent(TodoEvent.Edit) },
         colors = CardDefaults.cardColors(
             containerColor = cardColor
         )
@@ -70,25 +74,25 @@ fun ToDo(
         ) {
             Checkbox(
                 modifier = Modifier.size(24.dp),
-                checked = todoModel.isDone,
+                checked = isDone,
                 onCheckedChange = { onTodoEvent.invoke(TodoEvent.Done(it)) })
             Spacer(modifier = Modifier.size(8.dp))
             VerticalDivider(
                 Modifier
-                    .fillMaxHeight(), color = todoModel.deadLine.getOnBackgroundColor(),
+                    .fillMaxHeight(), color = deadline.getOnBackgroundColor(),
                 thickness = 1.dp
             )
             Spacer(modifier = Modifier.size(8.dp))
             Column(Modifier.weight(1f)) {
                 Text(
-                    text = todoModel.title,
+                    text = title,
                     color = textColor,
                     fontWeight = FontWeight.Bold,
                     textDecoration = textDecoration
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = todoModel.description, color = textColor, textDecoration = textDecoration
+                    text = description, color = textColor, textDecoration = textDecoration
                 )
             }
             Icon(
@@ -99,7 +103,7 @@ fun ToDo(
                     },
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete button",
-                tint = todoModel.deadLine.getOnBackgroundColor()
+                tint = deadline.getOnBackgroundColor()
             )
         }
 
@@ -110,20 +114,11 @@ fun ToDo(
             horizontalArrangement = Arrangement.End
         ) {
             Text(
-                text = todoModel.deadLine.timeLeft,
+                text = deadline.timeLeft,
                 fontStyle = FontStyle.Italic,
                 color = textColor,
                 textDecoration = textDecoration
             )
         }
     }
-}
-
-sealed class TodoEvent {
-    data object Delete : TodoEvent()
-    class Edit(val todoUiModel: TodoUiModel) : TodoEvent()
-    class Done(val isDone: Boolean) : TodoEvent()
-    data object Add : TodoEvent()
-    class SaveTodo(val id: Int?, val title: String, val description: String, val dueDate: String) :
-        TodoEvent()
 }

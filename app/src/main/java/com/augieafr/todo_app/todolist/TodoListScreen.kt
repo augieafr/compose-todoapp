@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.augieafr.todo_app.MainViewModel
 import com.augieafr.todo_app.ui.component.AddEditTodoDialog
 import com.augieafr.todo_app.ui.component.ToDo
-import com.augieafr.todo_app.ui.component.TodoEvent
+import com.augieafr.todo_app.ui.model.TodoEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +34,7 @@ fun ToDoListScreen(
         TopAppBar(title = { Text(text = "ToDo App") })
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
-            viewModel.todoEventHandler(0, TodoEvent.Add)
+            viewModel.todoEventHandler(0, null, TodoEvent.Add)
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
         }
@@ -49,29 +49,35 @@ fun ToDoListScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                         .height(IntrinsicSize.Max),
-                    todoModel = todo,
+                    title = todo.title,
+                    description = todo.description,
+                    isDone = todo.isDone,
+                    deadline = todo.deadLine,
                     onTodoEvent = { event ->
-                        viewModel.todoEventHandler(index, event)
+                        viewModel.todoEventHandler(index, todo.id, event)
                     }
                 )
             }
         }
 
-        viewModel.isShowAddEditTodo.value?.let {
-            AddEditTodoDialog(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                event = it,
-                onDismissRequest = {
-                    viewModel.isShowAddEditTodo.value = null
-                },
-                onSaveClicked = { id, title, description, dueDate ->
-                    viewModel.todoEventHandler(
-                        0,
-                        TodoEvent.SaveTodo(id, title, description, dueDate)
-                    )
-                }
-            )
+        with(viewModel.isShowAddEditTodo) {
+            if (first) {
+                AddEditTodoDialog(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    isEdit = second,
+                    onDismissRequest = {
+                        viewModel.isShowAddEditTodo = Pair(false, false)
+                    },
+                    onSaveClicked = { title, description, dueDate ->
+                        viewModel.todoEventHandler(
+                            0,
+                            null,
+                            TodoEvent.SaveTodo(title, description, dueDate)
+                        )
+                    }
+                )
+            }
         }
     }
 }

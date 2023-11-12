@@ -27,15 +27,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.augieafr.todo_app.ui.component.text_field.TodoTextField
 import com.augieafr.todo_app.ui.component.text_field.rememberTodoTextFieldState
-import com.augieafr.todo_app.ui.model.TodoUiModel
 import com.augieafr.todo_app.utils.changeDatePattern
 
 @Composable
 fun AddEditTodoDialog(
     modifier: Modifier = Modifier,
-    event: TodoEvent,
+    isEdit: Boolean = false,
+    title: String? = null,
+    description: String? = null,
+    dueDate: String? = null,
     onDismissRequest: () -> Unit,
-    onSaveClicked: (id: Int?, title: String, description: String, dueDate: String) -> Unit
+    onSaveClicked: (title: String, description: String, dueDate: String) -> Unit
 ) {
     Dialog(
         onDismissRequest = {
@@ -46,19 +48,12 @@ fun AddEditTodoDialog(
             modifier = modifier,
             color = MaterialTheme.colorScheme.primaryContainer
         ) {
-            val todoUiModel: TodoUiModel? = when (event) {
-                is TodoEvent.Edit -> {
-                    event.todoUiModel
-                }
 
-                else -> null
-            }
-
-            val titleInputState = rememberTodoTextFieldState(todoUiModel?.title.orEmpty())
+            val titleInputState = rememberTodoTextFieldState(title.orEmpty())
             val descriptionInputState =
-                rememberTodoTextFieldState(todoUiModel?.description.orEmpty())
+                rememberTodoTextFieldState(description.orEmpty())
             val dueDateInputState = rememberTodoTextFieldState(
-                todoUiModel?.dueDate.changeDatePattern(
+                dueDate.changeDatePattern(
                     sourcePattern = "yyyyMMdd",
                     targetPattern = "MM-dd-yyyy"
                 )
@@ -71,7 +66,7 @@ fun AddEditTodoDialog(
             }
 
             Column(Modifier.padding(16.dp)) {
-                TitleRow(text = if (todoUiModel == null) "Add" else "Edit") {
+                TitleRow(text = if (isEdit) "Edit" else "Add") {
                     onDismissRequest()
                 }
                 Spacer(modifier = Modifier.size(16.dp))
@@ -94,13 +89,12 @@ fun AddEditTodoDialog(
                 Spacer(modifier = Modifier.size(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     Button(enabled = !hasError.value, onClick = {
-                        val title = titleInputState.text
-                        val description = descriptionInputState.text
-                        val dueDate =
+                        val newTitle = titleInputState.text
+                        val newDescription = descriptionInputState.text
+                        val newDueDate =
                             dueDateInputState.text.changeDatePattern("MM-dd-yyyy", "yyyyMMdd")
-                        val id = todoUiModel?.id
                         onDismissRequest()
-                        onSaveClicked(id, title, description, dueDate)
+                        onSaveClicked(newTitle, newDescription, newDueDate)
                     }) {
                         Text(text = "Save")
                     }
