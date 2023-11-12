@@ -8,6 +8,7 @@ import com.augieafr.todo_app.data.repository.TodoRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -27,11 +28,10 @@ class DatabaseModule {
     }
 }
 
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 @Module
 class RepositoryModule {
     @Provides
-    @Singleton
     fun provideTodoRepository(todoDao: TodoDao): TodoRepository {
         return TodoRepository(todoDao)
     }

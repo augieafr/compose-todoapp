@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.augieafr.todo_app.MainViewModel
 import com.augieafr.todo_app.ui.component.AddEditTodoDialog
 import com.augieafr.todo_app.ui.component.ToDo
@@ -32,7 +33,7 @@ import com.augieafr.todo_app.ui.model.TodoEvent
 @Composable
 fun ToDoListScreen(
     modifier: Modifier,
-    viewModel: MainViewModel
+    viewModel: MainViewModel = hiltViewModel()
 ) {
 
     // A surface container using the 'background' color from the theme
