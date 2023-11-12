@@ -31,7 +31,7 @@ fun ToDoListScreen(
 
     // A surface container using the 'background' color from the theme
     Scaffold(modifier = modifier, topBar = {
-        TopAppBar(title = { Text(text = "KMM ToDo") })
+        TopAppBar(title = { Text(text = "ToDo App") })
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
             viewModel.todoEventHandler(0, ToDoEvent.Add)

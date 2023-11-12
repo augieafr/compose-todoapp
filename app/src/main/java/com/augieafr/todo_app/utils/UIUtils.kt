@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 fun dueDateToDeadline(dueDate: String): ToDoDeadline {
@@ -47,4 +48,12 @@ fun Long?.toDateFormat(pattern: String = "MM-dd-yyyy"): String {
     val calendar = Calendar.getInstance()
     calendar.timeInMillis = this
     return sdf.format(calendar.time)
+}
+
+fun String.toDateMillis(pattern: String = "MM-dd-yyyy"): Long? {
+    if (this.isEmpty()) return null
+    val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+    return sdf.parse(this)?.let {
+        it.time + TimeZone.getDefault().rawOffset
+    }
 }
