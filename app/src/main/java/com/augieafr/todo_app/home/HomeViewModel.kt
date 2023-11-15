@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
@@ -16,13 +17,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val repository: TodoRepository) : ViewModel() {
-    var searchQuery = MutableStateFlow("")
-    var todoGroupBy = MutableStateFlow(GroupBy.IS_DONE)
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String>
+        get() = _searchQuery
+
+    private val _todoGroupBy = MutableStateFlow(GroupBy.IS_DONE)
+    val todoGroupBy: StateFlow<GroupBy>
+        get() = _todoGroupBy
+
+    fun setQuery(query: String) {
+        _searchQuery.value = query
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val todoList: Flow<Map<String, List<TodoUiModel>>> =
         merge(searchQuery, todoGroupBy).flatMapLatest {
-            repository.getTodos(todoGroupBy.value)
+            repository.getTodos(todoGroupBy.value, searchQuery.value)
         }
 
     fun setTodoIsDone(todo: TodoUiModel) = viewModelScope.launch {

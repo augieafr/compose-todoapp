@@ -1,12 +1,17 @@
 package com.augieafr.todo_app.ui.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,17 +24,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.augieafr.todo_app.ui.component.text_field.SearchBarTextField
 
 sealed class Screen(val route: String) {
     data object Home : Screen("home") {
         @Composable
-        fun TopBarActions(onActionClicked: () -> Unit) {
-            Icon(
-                modifier = Modifier.clickable { onActionClicked() },
-                imageVector = Icons.Filled.AccountCircle,
-                contentDescription = "About me",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
+        fun TopBarActions(
+            query: String,
+            isSearchBarActive: Boolean,
+            onCancelSearch: () -> Unit,
+            onQueryChanged: (String) -> Unit,
+            onActionClicked: () -> Unit
+        ) {
+            AnimatedVisibility(enter = fadeIn(), exit = fadeOut(), visible = isSearchBarActive) {
+                SearchBarTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    query = query,
+                    onQueryChange = {
+                        onQueryChanged(it)
+                    },
+                    onCancelSearch = {
+                        onCancelSearch()
+                    }
+                )
+            }
+            if (!isSearchBarActive) {
+                Icon(
+                    modifier = Modifier.clickable { onCancelSearch() },
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                Spacer(modifier = Modifier.size(8.dp))
+                Icon(
+                    modifier = Modifier.clickable { onActionClicked() },
+                    imageVector = Icons.Filled.AccountCircle,
+                    contentDescription = "About me",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 

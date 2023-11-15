@@ -1,4 +1,4 @@
-package com.augieafr.todo_app.ui.component
+package com.augieafr.todo_app.ui.component.todo_appbar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,6 +20,7 @@ import com.augieafr.todo_app.ui.theme.TODOAppTheme
 fun TodoAppBar(
     route: String?,
     onNavigationUp: (() -> Unit)? = null,
+    isShowTitle: Boolean = true,
     actions: @Composable () -> Unit
 ) {
     val title = when (route) {
@@ -40,7 +41,7 @@ fun TodoAppBar(
 
     TopAppBar(
         windowInsets = WindowInsets(left = 16.dp, right = 16.dp),
-        title = { Text(text = title) },
+        title = { if (isShowTitle) Text(text = title) },
         actions = {
             actions()
         },
@@ -55,7 +56,13 @@ fun TodoAppBar(
 fun TodoAppBarPreview() {
     TODOAppTheme {
         TodoAppBar(route = Screen.DetailTodo.route, onNavigationUp = {}) {
+            Screen.Home.TopBarActions(
+                query = "",
+                isSearchBarActive = true,
+                onCancelSearch = {},
+                onQueryChanged = {}) {
 
+            }
         }
     }
 }

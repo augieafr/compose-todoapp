@@ -18,14 +18,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.augieafr.todo_app.ui.component.Todo
-import com.augieafr.todo_app.ui.component.TodoAppBar
 import com.augieafr.todo_app.ui.component.TodoStickyHeader
+import com.augieafr.todo_app.ui.component.todo_appbar.TodoAppBar
 import com.augieafr.todo_app.ui.model.TodoUiModel
 import com.augieafr.todo_app.ui.navigation.Screen
 
@@ -37,12 +41,18 @@ fun HomeScreen(
     navigateToProfile: () -> Unit,
     navigateToAddTodo: () -> Unit
 ) {
+    var isSearchBarActive by rememberSaveable {
+        mutableStateOf(false)
+    }
     Scaffold(modifier = modifier, topBar = {
         TodoAppBar(
-            route = Screen.Home.route, actions = {
-                Screen.Home.TopBarActions {
-                    navigateToProfile()
-                }
+            route = Screen.Home.route, isShowTitle = !isSearchBarActive, actions = {
+                Screen.Home.TopBarActions(
+                    query = viewModel.searchQuery.collectAsState().value,
+                    isSearchBarActive = isSearchBarActive,
+                    onCancelSearch = { isSearchBarActive = !isSearchBarActive },
+                    onQueryChanged = { viewModel.setQuery(it) },
+                    onActionClicked = { navigateToProfile() })
             }
         )
     }, floatingActionButton = {

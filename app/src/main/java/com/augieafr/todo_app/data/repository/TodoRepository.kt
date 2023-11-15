@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class TodoRepository @Inject constructor(private val todoDao: TodoDao) {
-    fun getTodos(groupBy: GroupBy) = todoDao.getTodos().map {
+    fun getTodos(groupBy: GroupBy, query: String) = todoDao.getTodos(query).map {
         val mapTodo = mutableMapOf<String, List<TodoUiModel>>()
         it.forEach { todoEntity ->
             val todoUiModel = todoEntity.toTodoUiModel()
