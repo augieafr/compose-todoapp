@@ -1,5 +1,6 @@
 package com.augieafr.todo_app.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.augieafr.todo_app.ui.component.Todo
 import com.augieafr.todo_app.ui.component.TodoAppBar
+import com.augieafr.todo_app.ui.component.TodoStickyHeader
+import com.augieafr.todo_app.ui.model.TodoUiModel
 import com.augieafr.todo_app.ui.navigation.Screen
 
 @Composable
@@ -48,42 +51,66 @@ fun HomeScreen(
         }
     }
     ) { paddingValues ->
-        val listTodo = viewModel.todoList.collectAsState(emptyList())
+        val listTodo = viewModel.todoList.collectAsState(emptyMap())
+        HomeScreenContent(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            listTodo = listTodo.value,
+            onDeleteTodo = { viewModel.deleteTodo(it) },
+            navigateToDetail = { navigateToDetail(it) },
+            onIsDoneClicked = { viewModel.setTodoIsDone(it) }
+        )
+    }
+}
 
-        if (listTodo.value.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    fontSize = 32.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    text = "No Todo"
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier.padding(paddingValues),
-            ) {
-                items(listTodo.value, key = {
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun HomeScreenContent(
+    modifier: Modifier = Modifier,
+    listTodo: Map<String, List<TodoUiModel>>,
+    onDeleteTodo: (TodoUiModel) -> Unit,
+    navigateToDetail: (Int) -> Unit,
+    onIsDoneClicked: (TodoUiModel) -> Unit
+) {
+    if (listTodo.isEmpty()) {
+        Box(
+            modifier = modifier
+        ) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                fontSize = 32.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                text = "No Todo"
+            )
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier,
+        ) {
+            listTodo.forEach { (key, value) ->
+                stickyHeader {
+                    TodoStickyHeader(key)
+                }
+
+                items(value, key = {
                     it.id
                 }) { todo ->
                     Todo(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-                            .height(IntrinsicSize.Max),
+                            .height(IntrinsicSize.Max)
+                            .animateItemPlacement(),
                         title = todo.title,
                         description = todo.description,
                         isDone = todo.isDone,
                         deadline = todo.deadLine,
                         onTodoEvent = { event ->
                             when (event) {
-                                HomeScreenEvent.Delete -> viewModel.deleteTodo(todo)
+                                HomeScreenEvent.Delete -> onDeleteTodo(todo)
                                 HomeScreenEvent.Detail -> navigateToDetail(todo.id)
-                                is HomeScreenEvent.Done -> viewModel.setTodoIsDone(todo.copy(isDone = event.isDone))
+                                is HomeScreenEvent.Done -> onIsDoneClicked(todo.copy(isDone = event.isDone))
                             }
                         }
                     )
