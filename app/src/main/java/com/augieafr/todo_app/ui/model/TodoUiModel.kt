@@ -14,34 +14,34 @@ data class TodoUiModel(
         fun generateDummyTodoList(): ArrayList<TodoUiModel> {
             return arrayListOf(
                 TodoUiModel(
-                    1,
+                    0,
                     "Title 1",
-                    "20230704",
-                    dueDateToDeadline("20230729"),
+                    "20231115",
+                    dueDateToDeadline("20231115"),
                     "Description 1",
                     false
                 ),
                 TodoUiModel(
                     2,
                     "Title 2",
-                    "20230630",
-                    dueDateToDeadline("20230731"),
+                    "20231116",
+                    dueDateToDeadline("20231116"),
                     "Description 2",
                     false
                 ),
                 TodoUiModel(
                     3,
                     "Title 3",
-                    "20230705",
-                    dueDateToDeadline("20230905"),
+                    "20231117",
+                    dueDateToDeadline("20231117"),
                     "Description 3",
                     true
                 ),
                 TodoUiModel(
                     4,
                     "Title 4",
-                    "20230505",
-                    dueDateToDeadline("20230505"),
+                    "20231118",
+                    dueDateToDeadline("20231118"),
                     "Description 4",
                     true
                 ),

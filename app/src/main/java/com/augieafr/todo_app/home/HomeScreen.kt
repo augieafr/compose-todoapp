@@ -39,10 +39,12 @@ fun HomeScreen(
 ) {
     Scaffold(modifier = modifier, topBar = {
         TodoAppBar(
-            route = Screen.Home.route,
-            onActionClicked = {
-                navigateToProfile()
-            })
+            route = Screen.Home.route, actions = {
+                Screen.Home.TopBarActions {
+                    navigateToProfile()
+                }
+            }
+        )
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
             navigateToAddTodo()
