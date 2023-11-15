@@ -3,7 +3,7 @@ package com.augieafr.todo_app.data.repository
 import com.augieafr.todo_app.data.dao.TodoDao
 import com.augieafr.todo_app.data.mapper.toTodoEntity
 import com.augieafr.todo_app.data.mapper.toTodoUiModel
-import com.augieafr.todo_app.ui.component.dropdown_menu.GroupBy
+import com.augieafr.todo_app.ui.model.GroupBy
 import com.augieafr.todo_app.ui.model.ToDoDeadline
 import com.augieafr.todo_app.ui.model.TodoUiModel
 import kotlinx.coroutines.Dispatchers

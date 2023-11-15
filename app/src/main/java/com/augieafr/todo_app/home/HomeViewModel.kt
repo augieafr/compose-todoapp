@@ -3,7 +3,7 @@ package com.augieafr.todo_app.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.augieafr.todo_app.data.repository.TodoRepository
-import com.augieafr.todo_app.ui.component.dropdown_menu.GroupBy
+import com.augieafr.todo_app.ui.model.GroupBy
 import com.augieafr.todo_app.ui.model.TodoUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
