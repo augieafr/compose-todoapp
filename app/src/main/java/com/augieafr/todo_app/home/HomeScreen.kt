@@ -50,9 +50,11 @@ fun HomeScreen(
                 Screen.Home.TopBarActions(
                     query = viewModel.searchQuery.collectAsState().value,
                     isSearchBarActive = isSearchBarActive,
+                    groupBy = viewModel.todoGroupBy.collectAsState().value,
                     onCancelSearch = { isSearchBarActive = !isSearchBarActive },
                     onQueryChanged = { viewModel.setQuery(it) },
-                    onActionClicked = { navigateToProfile() })
+                    onGroupByChanged = { viewModel.changeGroupBy() },
+                    navigateToProfileScreen = { navigateToProfile() })
             }
         )
     }, floatingActionButton = {

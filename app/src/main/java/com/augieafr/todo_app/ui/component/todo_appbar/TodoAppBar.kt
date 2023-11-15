@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.augieafr.todo_app.ui.model.GroupBy
 import com.augieafr.todo_app.ui.navigation.Screen
 import com.augieafr.todo_app.ui.theme.TODOAppTheme
 
@@ -40,7 +41,7 @@ fun TodoAppBar(
     }
 
     TopAppBar(
-        windowInsets = WindowInsets(left = 16.dp, right = 16.dp),
+        windowInsets = WindowInsets(right = 8.dp),
         title = { if (isShowTitle) Text(text = title) },
         actions = {
             actions()
@@ -59,7 +60,9 @@ fun TodoAppBarPreview() {
             Screen.Home.TopBarActions(
                 query = "",
                 isSearchBarActive = true,
+                groupBy = GroupBy.DEADLINE,
                 onCancelSearch = {},
+                onGroupByChanged = {},
                 onQueryChanged = {}) {
 
             }

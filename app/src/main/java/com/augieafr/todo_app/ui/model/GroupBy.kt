@@ -1,5 +1,5 @@
 package com.augieafr.todo_app.ui.model
 
-enum class GroupBy {
-    DEADLINE, IS_DONE
+enum class GroupBy(val wording: String) {
+    DEADLINE("Grouped by deadline"), IS_DONE("Grouped by task done")
 }

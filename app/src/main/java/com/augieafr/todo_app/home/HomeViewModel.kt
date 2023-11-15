@@ -46,4 +46,12 @@ class HomeViewModel @Inject constructor(private val repository: TodoRepository) 
             todo
         )
     }
+
+    fun changeGroupBy() {
+        if (_todoGroupBy.value == GroupBy.IS_DONE) {
+            _todoGroupBy.value = GroupBy.DEADLINE
+        } else {
+            _todoGroupBy.value = GroupBy.IS_DONE
+        }
+    }
 }

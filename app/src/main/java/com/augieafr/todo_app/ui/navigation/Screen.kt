@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.augieafr.todo_app.ui.component.GroupByIconAnimated
 import com.augieafr.todo_app.ui.component.text_field.SearchBarTextField
+import com.augieafr.todo_app.ui.model.GroupBy
 
 sealed class Screen(val route: String) {
     data object Home : Screen("home") {
@@ -32,9 +34,11 @@ sealed class Screen(val route: String) {
         fun TopBarActions(
             query: String,
             isSearchBarActive: Boolean,
+            groupBy: GroupBy,
             onCancelSearch: () -> Unit,
+            onGroupByChanged: () -> Unit,
             onQueryChanged: (String) -> Unit,
-            onActionClicked: () -> Unit
+            navigateToProfileScreen: () -> Unit
         ) {
             AnimatedVisibility(enter = fadeIn(), exit = fadeOut(), visible = isSearchBarActive) {
                 SearchBarTextField(
@@ -56,8 +60,11 @@ sealed class Screen(val route: String) {
                     tint = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.size(8.dp))
+                GroupByIconAnimated(groupBy = groupBy, onGroupByChanged)
+                Spacer(modifier = Modifier.size(8.dp))
                 Icon(
-                    modifier = Modifier.clickable { onActionClicked() },
+                    modifier = Modifier
+                        .clickable { navigateToProfileScreen() },
                     imageVector = Icons.Filled.AccountCircle,
                     contentDescription = "About me",
                     tint = MaterialTheme.colorScheme.onSurface
