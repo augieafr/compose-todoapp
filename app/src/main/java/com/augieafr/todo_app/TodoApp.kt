@@ -8,8 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.augieafr.todo_app.detail_todo.DetailTodoScreen
-import com.augieafr.todo_app.home.HomeScreen
+import com.augieafr.todo_app.ui.detail_todo.DetailTodoScreen
+import com.augieafr.todo_app.ui.home.HomeScreen
 import com.augieafr.todo_app.ui.navigation.Screen
 
 @Composable

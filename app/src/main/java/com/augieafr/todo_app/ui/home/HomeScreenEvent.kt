@@ -1,4 +1,4 @@
-package com.augieafr.todo_app.home
+package com.augieafr.todo_app.ui.home
 
 sealed class HomeScreenEvent {
     data object Delete : HomeScreenEvent()

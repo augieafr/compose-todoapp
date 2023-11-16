@@ -1,4 +1,4 @@
-package com.augieafr.todo_app.detail_todo
+package com.augieafr.todo_app.ui.detail_todo
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

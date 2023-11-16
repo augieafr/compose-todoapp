@@ -1,4 +1,4 @@
-package com.augieafr.todo_app.home
+package com.augieafr.todo_app.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
@@ -95,7 +95,7 @@ fun HomeScreenContent(
                 modifier = Modifier.align(Alignment.Center),
                 fontSize = 32.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                text = "No Todo"
+                text = "No todo found"
             )
         }
     } else {

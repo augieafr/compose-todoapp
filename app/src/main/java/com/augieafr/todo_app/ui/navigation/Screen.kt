@@ -6,6 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -42,7 +43,9 @@ sealed class Screen(val route: String) {
         ) {
             AnimatedVisibility(enter = fadeIn(), exit = fadeOut(), visible = isSearchBarActive) {
                 SearchBarTextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
                     query = query,
                     onQueryChange = {
                         onQueryChanged(it)
