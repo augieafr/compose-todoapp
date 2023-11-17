@@ -11,16 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,28 +27,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.augieafr.todo_app.ui.model.TodoUiModel
+import com.augieafr.todo_app.ui.home.HomeScreenEvent
+import com.augieafr.todo_app.ui.model.ToDoDeadline
 
 
 @Composable
-fun ToDo(
-    todoModel: TodoUiModel,
+fun Todo(
+    title: String,
+    description: String,
+    isDone: Boolean,
+    deadline: ToDoDeadline,
     modifier: Modifier = Modifier,
-    onTodoEvent: (ToDoEvent) -> Unit
+    onTodoEvent: (HomeScreenEvent) -> Unit
 ) {
     val cardColor: Color
     val textColor: Color
     val textDecoration: TextDecoration
 
-    if (todoModel.isDone) {
+    if (isDone) {
         with(MaterialTheme.colorScheme) {
             cardColor = surfaceVariant
             textColor = onSurfaceVariant
         }
         textDecoration = TextDecoration.LineThrough
     } else {
-        with(todoModel.deadLine) {
+        with(deadline) {
             cardColor = getBackgroundColor()
             textColor = getOnBackgroundColor()
         }
@@ -57,7 +61,7 @@ fun ToDo(
     }
 
     Card(
-        modifier = modifier.clickable { onTodoEvent.invoke(ToDoEvent.Edit(todoModel)) },
+        modifier = modifier.clickable { onTodoEvent(HomeScreenEvent.Detail) },
         colors = CardDefaults.cardColors(
             containerColor = cardColor
         )
@@ -71,36 +75,36 @@ fun ToDo(
         ) {
             Checkbox(
                 modifier = Modifier.size(24.dp),
-                checked = todoModel.isDone,
-                onCheckedChange = { onTodoEvent.invoke(ToDoEvent.Done(it)) })
+                checked = isDone,
+                onCheckedChange = { onTodoEvent.invoke(HomeScreenEvent.Done(it)) })
             Spacer(modifier = Modifier.size(8.dp))
-            Divider(
+            VerticalDivider(
                 Modifier
-                    .width(1.dp)
-                    .fillMaxHeight(), color = todoModel.deadLine.getOnBackgroundColor()
+                    .fillMaxHeight(), color = deadline.getOnBackgroundColor(),
+                thickness = 1.dp
             )
             Spacer(modifier = Modifier.size(8.dp))
             Column(Modifier.weight(1f)) {
                 Text(
-                    text = todoModel.title,
+                    text = title,
                     color = textColor,
                     fontWeight = FontWeight.Bold,
                     textDecoration = textDecoration
                 )
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
-                    text = todoModel.description, color = textColor, textDecoration = textDecoration
+                    text = description, color = textColor, textDecoration = textDecoration
                 )
             }
             Icon(
                 modifier = Modifier
                     .align(Alignment.Top)
                     .clickable {
-                        onTodoEvent.invoke(ToDoEvent.Delete)
+                        onTodoEvent.invoke(HomeScreenEvent.Delete)
                     },
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete button",
-                tint = todoModel.deadLine.getOnBackgroundColor()
+                tint = deadline.getOnBackgroundColor()
             )
         }
 
@@ -111,7 +115,7 @@ fun ToDo(
             horizontalArrangement = Arrangement.End
         ) {
             Text(
-                text = todoModel.deadLine.timeLeft,
+                text = deadline.timeLeft,
                 fontStyle = FontStyle.Italic,
                 color = textColor,
                 textDecoration = textDecoration
@@ -120,11 +124,16 @@ fun ToDo(
     }
 }
 
-sealed class ToDoEvent {
-    object Delete : ToDoEvent()
-    class Edit(val todoUiModel: TodoUiModel) : ToDoEvent()
-    class Done(val isDone: Boolean) : ToDoEvent()
-    object Add : ToDoEvent()
-    class SaveTodo(val id: Int?, val title: String, val description: String, val dueDate: String) :
-        ToDoEvent()
+@Preview
+@Composable
+fun TodoPreview() {
+    Todo(
+        title = "Preview Todo",
+        description = "Preview description",
+        isDone = false,
+        deadline = ToDoDeadline.FAR("1 Year left"),
+        onTodoEvent = {
+
+        }
+    )
 }

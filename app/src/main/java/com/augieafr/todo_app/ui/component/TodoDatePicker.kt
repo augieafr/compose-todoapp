@@ -21,12 +21,13 @@ import com.augieafr.todo_app.utils.toDateFormat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoDatePicker(
-    initialDisplayMonthMillis: Long = System.currentTimeMillis(),
+    initialSelectedDateMillis: Long? = null,
     onDismissRequest: () -> Unit,
     onSaveButtonClick: (String) -> Unit
 ) {
     val datePickerState = rememberDatePickerState(
-        initialDisplayedMonthMillis = initialDisplayMonthMillis,
+        initialSelectedDateMillis = initialSelectedDateMillis,
+        initialDisplayedMonthMillis = initialSelectedDateMillis ?: System.currentTimeMillis(),
         initialDisplayMode = DisplayMode.Picker
     )
 
