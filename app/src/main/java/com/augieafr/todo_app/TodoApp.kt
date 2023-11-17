@@ -1,5 +1,7 @@
 package com.augieafr.todo_app
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -17,27 +19,35 @@ fun TodoApp(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) {
-            HomeScreen(
-                modifier,
-                navigateToProfile = {},
-                navigateToAddTodo = {},
-                navigateToDetail = {
-                    navController.navigate(Screen.DetailTodo.createRoute(it))
+    NavHost(
+        navController = navController,
+        startDestination = Screen.Home.route,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+        popEnterTransition = {
+            EnterTransition.None
+        },
+        builder = {
+            composable(Screen.Home.route) {
+                HomeScreen(
+                    modifier,
+                    navigateToProfile = {},
+                    navigateToAddTodo = {},
+                    navigateToDetail = {
+                        navController.navigate(Screen.DetailTodo.createRoute(it))
 
+                    })
+            }
+            composable(
+                route = Screen.DetailTodo.route,
+                arguments = listOf(navArgument(Screen.TODO_ID_KEY) {
+                    type = NavType.IntType
                 })
-        }
-        composable(
-            route = Screen.DetailTodo.route,
-            arguments = listOf(navArgument(Screen.TODO_ID_KEY) {
-                type = NavType.IntType
-            })
-        ) {
-            val todoId = it.arguments?.getInt(Screen.TODO_ID_KEY) ?: -1
-            DetailTodoScreen(modifier = modifier, todoId = todoId, onNavigateUp = {
-                navController.navigateUp()
-            })
-        }
-    }
+            ) {
+                val todoId = it.arguments?.getInt(Screen.TODO_ID_KEY) ?: -1
+                DetailTodoScreen(modifier = modifier, todoId = todoId, onNavigateUp = {
+                    navController.navigateUp()
+                })
+            }
+        })
 }

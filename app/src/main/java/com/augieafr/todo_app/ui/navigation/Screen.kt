@@ -15,19 +15,15 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.augieafr.todo_app.R
 import com.augieafr.todo_app.ui.component.GroupByIconAnimated
 import com.augieafr.todo_app.ui.component.text_field.SearchBarTextField
 import com.augieafr.todo_app.ui.model.GroupBy
+import com.augieafr.todo_app.utils.noRippleClickable
 
 sealed class Screen(val route: String) {
     data object Home : Screen("home") {
@@ -80,27 +76,37 @@ sealed class Screen(val route: String) {
     data object AddTodo : Screen("add")
     data object DetailTodo : Screen("home/{$TODO_ID_KEY}") {
         @Composable
-        fun TopBarActions(onActionClicked: () -> Unit) {
-            var isOnEdit by rememberSaveable {
-                mutableStateOf(false)
-            }
-            val modifier = Modifier.clickable {
-                isOnEdit = !isOnEdit
-                onActionClicked()
+        fun TopBarActions(
+            isOnEdit: Boolean,
+            hasError: Boolean,
+            canUndo: Boolean,
+            onSaveEditClicked: () -> Unit,
+            onUndoClicked: () -> Unit
+        ) {
+            val editColor =
+                if (hasError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+            if (canUndo) {
+                Icon(
+                    modifier = Modifier
+                        .noRippleClickable {
+                            onUndoClicked()
+                        }
+                        .size(18.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                    painter = painterResource(id = R.drawable.baseline_undo_24),
+                    contentDescription = "Undo"
+                )
+                Spacer(modifier = Modifier.size(14.dp))
             }
             Icon(
-                modifier = modifier.size(18.dp),
-                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .noRippleClickable {
+                        onSaveEditClicked()
+                    }
+                    .size(18.dp),
+                tint = editColor,
                 imageVector = if (isOnEdit) Icons.Filled.Done else Icons.Filled.Edit,
                 contentDescription = "Edit Todo"
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-            Text(
-                modifier = modifier,
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
-                text = if (isOnEdit) "Done" else "Edit"
             )
         }
 

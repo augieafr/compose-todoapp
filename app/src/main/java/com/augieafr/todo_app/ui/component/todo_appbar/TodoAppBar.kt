@@ -41,7 +41,7 @@ fun TodoAppBar(
     }
 
     TopAppBar(
-        windowInsets = WindowInsets(right = 8.dp),
+        windowInsets = WindowInsets(right = 16.dp),
         title = { if (isShowTitle) Text(text = title) },
         actions = {
             actions()

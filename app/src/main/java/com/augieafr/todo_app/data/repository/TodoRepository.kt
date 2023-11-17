@@ -9,9 +9,14 @@ import com.augieafr.todo_app.ui.model.TodoUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class TodoRepository @Inject constructor(private val todoDao: TodoDao) {
+    suspend fun getTodoById(id: Int) = withContext(Dispatchers.IO) {
+        todoDao.getTodoById(id).toTodoUiModel()
+    }
+
     fun getTodos(groupBy: GroupBy, query: String) = todoDao.getTodos(query).map {
         val mapTodo = mutableMapOf<String, List<TodoUiModel>>()
         it.forEach { todoEntity ->
