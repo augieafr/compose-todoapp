@@ -24,6 +24,8 @@ class DetailTodoViewModel @Inject constructor(private val todoRepository: TodoRe
     fun saveTodo(oldTodo: TodoUiModel, title: String, description: String, dueDate: String) =
         viewModelScope.launch {
             val newTodo = oldTodo.copy(title = title, description = description, dueDate = dueDate)
+            // don't save if the newTodo is the same as the oldTodo
+            if (newTodo == oldTodo) return@launch
             todoRepository.addEditTodo(
                 newTodo
             )

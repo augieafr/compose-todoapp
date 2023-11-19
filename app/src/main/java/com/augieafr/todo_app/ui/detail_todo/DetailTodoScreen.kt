@@ -77,30 +77,44 @@ fun DetailTodoScreen(
         val scope = rememberCoroutineScope()
 
         BackHandler {
-            if (isOnEdit) {
-                handleUnsavedTodo(snackbarHostState, scope, hasError, onHasNoError = {
+            handleBackPressed(
+                isOnEdit,
+                canUndo,
+                snackbarHostState,
+                scope,
+                hasError,
+                onHasNoError = {
                     isOnEdit = false
-                }, onSaveTodo = {
+                },
+                onSaveTodo = {
                     detailViewModel.saveTodo(
                         todo, titleState.text, descriptionState.text, dueDateState
                     )
-                })
-            } else onNavigateUp()
+                },
+                onNavigateUp = onNavigateUp
+            )
         }
 
         Scaffold(snackbarHost = {
             SnackbarHost(snackbarHostState)
         }, topBar = {
             TodoAppBar(route = Screen.DetailTodo.route, onNavigationUp = {
-                if (isOnEdit) {
-                    handleUnsavedTodo(snackbarHostState, scope, hasError, onHasNoError = {
+                handleBackPressed(
+                    isOnEdit,
+                    canUndo,
+                    snackbarHostState,
+                    scope,
+                    hasError,
+                    onHasNoError = {
                         isOnEdit = false
-                    }, onSaveTodo = {
+                    },
+                    onSaveTodo = {
                         detailViewModel.saveTodo(
                             todo, titleState.text, descriptionState.text, dueDateState
                         )
-                    })
-                } else onNavigateUp()
+                    },
+                    onNavigateUp = onNavigateUp
+                )
             }) {
                 Screen.DetailTodo.TopBarActions(isOnEdit = isOnEdit,
                     canUndo = canUndo,
@@ -149,13 +163,20 @@ fun DetailTodoScreen(
     }
 }
 
-private fun handleUnsavedTodo(
+private fun handleBackPressed(
+    isOnEdit: Boolean,
+    canUndo: Boolean,
     snackbarHostState: SnackbarHostState,
     scope: CoroutineScope,
     hasError: Boolean,
     onSaveTodo: () -> Unit,
     onHasNoError: () -> Unit,
+    onNavigateUp: () -> Unit
 ) {
+    if (!isOnEdit || !canUndo) {
+        onNavigateUp()
+        return
+    }
     snackbarHostState.showSnackbar(message = "Please save your todo first",
         scope = scope,
         actionLabel = "Save",
