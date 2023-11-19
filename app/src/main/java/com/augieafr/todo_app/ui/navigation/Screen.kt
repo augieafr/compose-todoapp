@@ -73,7 +73,6 @@ sealed class Screen(val route: String) {
     }
 
     data object Profile : Screen("profile")
-    data object AddTodo : Screen("add")
     data object DetailTodo : Screen("home/{$TODO_ID_KEY}") {
         @Composable
         fun TopBarActions(

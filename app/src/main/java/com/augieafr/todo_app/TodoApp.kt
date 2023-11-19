@@ -1,9 +1,12 @@
 package com.augieafr.todo_app
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,6 +16,7 @@ import androidx.navigation.navArgument
 import com.augieafr.todo_app.ui.detail_todo.DetailTodoScreen
 import com.augieafr.todo_app.ui.home.HomeScreen
 import com.augieafr.todo_app.ui.navigation.Screen
+import com.augieafr.todo_app.ui.profile.MyProfileScreen
 
 @Composable
 fun TodoApp(
@@ -31,8 +35,9 @@ fun TodoApp(
             composable(Screen.Home.route) {
                 HomeScreen(
                     modifier,
-                    navigateToProfile = {},
-                    navigateToAddTodo = {},
+                    navigateToProfile = {
+                        navController.navigate(Screen.Profile.route)
+                    },
                     navigateToDetail = {
                         navController.navigate(Screen.DetailTodo.createRoute(it))
 
@@ -47,6 +52,16 @@ fun TodoApp(
                 val todoId = it.arguments?.getInt(Screen.TODO_ID_KEY) ?: -1
                 DetailTodoScreen(modifier = modifier, todoId = todoId, onNavigateUp = {
                     navController.navigateUp()
+                })
+            }
+            composable(Screen.Profile.route) {
+                val context = LocalContext.current
+                MyProfileScreen(modifier = modifier, onNavigateUp = {
+                    navController.navigateUp()
+                }, onNavigateToBrowser = {
+                    val webpage: Uri = Uri.parse(it)
+                    val intent = Intent(Intent.ACTION_VIEW, webpage)
+                    context.startActivity(intent)
                 })
             }
         })

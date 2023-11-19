@@ -39,7 +39,6 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navigateToDetail: (Int) -> Unit,
     navigateToProfile: () -> Unit,
-    navigateToAddTodo: () -> Unit
 ) {
     var isSearchBarActive by rememberSaveable {
         mutableStateOf(false)
@@ -59,7 +58,7 @@ fun HomeScreen(
         )
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
-            navigateToAddTodo()
+
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
         }

@@ -22,7 +22,7 @@ fun TodoAppBar(
     route: String?,
     onNavigationUp: (() -> Unit)? = null,
     isShowTitle: Boolean = true,
-    actions: @Composable () -> Unit
+    actions: (@Composable () -> Unit)? = null
 ) {
     val title = when (route) {
         Screen.Home.route -> "Todo App"
@@ -31,23 +31,20 @@ fun TodoAppBar(
         else -> return
     }
 
-    @Composable
-    fun NavigationUp() {
-        Icon(
-            modifier = Modifier.clickable { onNavigationUp?.invoke() },
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Navigation Up"
-        )
-    }
-
     TopAppBar(
         windowInsets = WindowInsets(right = 16.dp),
         title = { if (isShowTitle) Text(text = title) },
         actions = {
-            actions()
+            actions?.invoke()
         },
         navigationIcon = {
-            if (route != Screen.Home.route) NavigationUp()
+            if (route != Screen.Home.route) {
+                Icon(
+                    modifier = Modifier.clickable { onNavigationUp?.invoke() },
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Navigation Up"
+                )
+            }
         }
     )
 }
