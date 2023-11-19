@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -41,13 +42,16 @@ fun DetailTodoScreen(
     todoId: Int,
     onNavigateUp: () -> Unit
 ) {
-    var isOnEdit by rememberSaveable {
-        mutableStateOf(false)
+    // get data only once
+    LaunchedEffect(Unit) {
+        detailViewModel.getTodo(todoId)
     }
     val todoUiModel by detailViewModel.todo.collectAsState(null)
 
-    detailViewModel.getTodo(todoId)
     todoUiModel?.let { todo ->
+        var isOnEdit by rememberSaveable {
+            mutableStateOf(false)
+        }
         val titleState = rememberTodoTextFieldState(todo.title)
         var dueDateState by rememberSaveable {
             mutableStateOf(
@@ -55,19 +59,20 @@ fun DetailTodoScreen(
             )
         }
         val descriptionState = rememberTodoTextFieldState(todo.description)
-        val hasError by remember {
+
+        // using key so whenever todoUiModel value changed it will re-calculate it state
+        val hasError by remember(key1 = todoUiModel) {
             derivedStateOf {
                 titleState.isError || descriptionState.isError
             }
         }
-        val canUndo by remember {
+        val canUndo by remember(key1 = todoUiModel) {
             derivedStateOf {
                 todo.dueDate != dueDateState ||
                         todo.title != titleState.text ||
                         todo.description != descriptionState.text
             }
         }
-
         val snackbarHostState = remember { SnackbarHostState() }
         val scope = rememberCoroutineScope()
 
@@ -77,7 +82,7 @@ fun DetailTodoScreen(
                     isOnEdit = false
                 }, onSaveTodo = {
                     detailViewModel.saveTodo(
-                        titleState.text, descriptionState.text, dueDateState
+                        todo, titleState.text, descriptionState.text, dueDateState
                     )
                 })
             } else onNavigateUp()
@@ -92,7 +97,7 @@ fun DetailTodoScreen(
                         isOnEdit = false
                     }, onSaveTodo = {
                         detailViewModel.saveTodo(
-                            titleState.text, descriptionState.text, dueDateState
+                            todo, titleState.text, descriptionState.text, dueDateState
                         )
                     })
                 } else onNavigateUp()
@@ -108,7 +113,7 @@ fun DetailTodoScreen(
                     onSaveEditClicked = {
                         saveTodo(hasError, snackbarHostState, scope, isOnEdit, onSaveTodo = {
                             detailViewModel.saveTodo(
-                                titleState.text, descriptionState.text, dueDateState
+                                todo, titleState.text, descriptionState.text, dueDateState
                             )
                         }, onHasNoError = {
                             isOnEdit = !isOnEdit
