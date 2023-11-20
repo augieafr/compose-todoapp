@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 fun SearchBarTextField(
     modifier: Modifier = Modifier,
     query: String,
+    placeholder: String,
     onQueryChange: (String) -> Unit,
     onCancelSearch: () -> Unit
 ) {
@@ -44,7 +45,7 @@ fun SearchBarTextField(
         value = query,
         placeholder = {
             Text(
-                text = "Search with title",
+                text = placeholder,
             )
         },
         onValueChange = { onQueryChange(it) },
@@ -66,5 +67,5 @@ fun SearchBarTextField(
 @Preview
 @Composable
 fun SearchBarTextFieldPreview() {
-    SearchBarTextField(Modifier.fillMaxWidth(), "", {}, {})
+    SearchBarTextField(Modifier.fillMaxWidth(), "", "", {}, {})
 }

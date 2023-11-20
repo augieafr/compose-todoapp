@@ -1,7 +1,6 @@
 package com.augieafr.todo_app.ui.component.todo_appbar
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -11,7 +10,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.augieafr.todo_app.ui.model.GroupBy
 import com.augieafr.todo_app.ui.navigation.Screen
 import com.augieafr.todo_app.ui.theme.TODOAppTheme
@@ -32,7 +30,6 @@ fun TodoAppBar(
     }
 
     TopAppBar(
-        windowInsets = WindowInsets(right = 16.dp),
         title = { if (isShowTitle) Text(text = title) },
         actions = {
             actions?.invoke()

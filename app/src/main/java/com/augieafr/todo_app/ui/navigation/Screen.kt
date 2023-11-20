@@ -43,6 +43,7 @@ sealed class Screen(val route: String) {
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
                     query = query,
+                    placeholder = "Search by title",
                     onQueryChange = {
                         onQueryChanged(it)
                     },
@@ -68,6 +69,7 @@ sealed class Screen(val route: String) {
                     contentDescription = "About me",
                     tint = MaterialTheme.colorScheme.onSurface
                 )
+                Spacer(modifier = Modifier.size(16.dp))
             }
         }
     }
@@ -107,6 +109,7 @@ sealed class Screen(val route: String) {
                 imageVector = if (isOnEdit) Icons.Filled.Done else Icons.Filled.Edit,
                 contentDescription = "Edit Todo"
             )
+            Spacer(modifier = Modifier.size(16.dp))
         }
 
         fun createRoute(todoId: Int) = "home/$todoId"

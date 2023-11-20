@@ -27,7 +27,7 @@ class DetailTodoViewModel @Inject constructor(private val todoRepository: TodoRe
             val newTodo = oldTodo.copy(
                 title = title,
                 description = description,
-                deadLine = dueDateToDeadline(dueDate)
+                deadLine = dueDateToDeadline(dueDate, "MMM dd, yyyy")
             )
             // don't save if the newTodo is the same as the oldTodo
             if (newTodo == oldTodo) return@launch
