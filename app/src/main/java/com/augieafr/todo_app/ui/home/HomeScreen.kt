@@ -24,9 +24,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.augieafr.todo_app.R
 import com.augieafr.todo_app.ui.component.AddTodoDialog
 import com.augieafr.todo_app.ui.component.Todo
 import com.augieafr.todo_app.ui.component.TodoStickyHeader
@@ -62,15 +65,18 @@ fun HomeScreen(
             }
         )
     }, floatingActionButton = {
-        FloatingActionButton(onClick = {
-            isShowAddTodoDialog = true
-        }) {
+        FloatingActionButton(
+            modifier = Modifier.testTag(stringResource(R.string.fab_test_tag)),
+            onClick = {
+                isShowAddTodoDialog = true
+            }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
         }
     }
     ) { paddingValues ->
         val listTodo = homeViewModel.todoList.collectAsState(emptyMap())
         if (isShowAddTodoDialog) AddTodoDialog(
+            modifier = Modifier.testTag(stringResource(R.string.add_todo_dialog_test_tag)),
             onDismissDialog = { isShowAddTodoDialog = false },
             onAddTodo = { title, description, dueDate ->
                 homeViewModel.addTodo(title, description, dueDate)
@@ -101,15 +107,17 @@ fun HomeScreenContent(
             modifier = modifier
         ) {
             Text(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .testTag(stringResource(id = R.string.empty_todo_test_tag)),
                 fontSize = 32.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                text = "No todo found"
+                text = stringResource(id = R.string.empty_todo_message)
             )
         }
     } else {
         LazyColumn(
-            modifier = modifier,
+            modifier = modifier.testTag("TodoList"),
         ) {
             listTodo.forEach { (key, value) ->
                 stickyHeader {

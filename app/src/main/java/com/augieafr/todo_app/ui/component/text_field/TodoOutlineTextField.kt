@@ -24,6 +24,7 @@ fun TodoOutlineTextField(
     modifier: Modifier = Modifier,
     state: TodoTextFieldState,
     label: String,
+    placeholder: String,
     minLines: Int = 1,
     readOnly: Boolean = false,
     trailingIcon: @Composable (RowScope.() -> Unit)? = null
@@ -41,6 +42,9 @@ fun TodoOutlineTextField(
                 minLines = minLines,
                 textStyle = MaterialTheme.typography.bodyMedium,
                 readOnly = readOnly,
+                placeholder = {
+                    Text(text = placeholder)
+                },
                 onValueChange = {
                     state.text = it
                 },
@@ -57,6 +61,7 @@ fun TodoOutlineTextFieldPreview() {
     TodoOutlineTextField(
         state = rememberTodoTextFieldState("test"),
         label = "Preview",
+        placeholder = "Placeholder",
         readOnly = true
     ) {
         Icon(

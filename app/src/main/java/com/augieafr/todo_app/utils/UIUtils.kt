@@ -24,8 +24,8 @@ fun dueDateToDeadline(dueDate: String, sourcePattern: String = "yyyyMMdd"): ToDo
     val currentDate = Date()
     val endDate = sdf.parse(dueDate)
 
-    val timeLeft = (endDate?.time ?: 0) - currentDate.time
-    val dayLeft = TimeUnit.MILLISECONDS.toDays(timeLeft)
+    val timeLeft = (endDate?.time ?: 0) - currentDate.time + TimeZone.getDefault().rawOffset
+    val dayLeft = TimeUnit.MILLISECONDS.toDays(timeLeft) + 1
     val uiDueDate = if (sourcePattern == targetPattern) dueDate else dueDate.changeDatePattern(
         sourcePattern,
         targetPattern

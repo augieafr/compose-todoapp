@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">TODO App</string>
+    <string name="empty_todo_test_tag">empty_todo</string>
+    <string name="empty_todo_message">No todo found</string>
+    <string name="fab_test_tag">fab_test_tag</string>
+    <string name="add_todo_dialog_test_tag">add_todo_dialog</string>
+    <string name="close_content_desc">close</string>
+    <string name="title_text_field_placeholder">Enter title</string>
+    <string name="description_text_field_placeholder">Enter description</string>
+    <string name="due_date_text_field_placeholder">Select date</string>
+    <string name="open_date_picker_content_desc">open date picker</string>
+    <string name="add_button_test_tag">add_button\n</string>
+    <string name="search_bar_test_tag">search_bar_test_tag</string>
 </resources>

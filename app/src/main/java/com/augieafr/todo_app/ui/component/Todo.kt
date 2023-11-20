@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -74,7 +75,9 @@ fun Todo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier
+                    .size(24.dp)
+                    .testTag("Checkbox"),
                 checked = isDone,
                 onCheckedChange = { onTodoEvent.invoke(TodoEvent.Done(it)) })
             Spacer(modifier = Modifier.size(8.dp))
