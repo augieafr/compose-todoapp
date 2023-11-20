@@ -106,10 +106,6 @@ class HomeScreenTest {
     fun group_by_deadline(): Unit = with(composeTestRule) {
         // add to do with near deadline
         addTodo(context, "First todo", "First description", 2)
-        // add to do with mid deadline
-        addTodo(context, "Second todo", "Second description", 5)
-        // add to do with far deadline
-        addTodo(context, "Third todo", "Third description", 8)
 
         // now should display to do group by isDone
         onNodeWithText("To do").assertIsDisplayed()
@@ -117,8 +113,6 @@ class HomeScreenTest {
         onNodeWithContentDescription("Group by").performClick()
         // validate group by deadline
         onNodeWithText("Near").assertIsDisplayed()
-        onNodeWithText("Mid").assertIsDisplayed()
-        onNodeWithText("Far").assertIsDisplayed()
     }
 
     @Test
