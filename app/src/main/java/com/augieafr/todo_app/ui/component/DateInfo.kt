@@ -30,7 +30,7 @@ fun DateInfo(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
     ) {
-        Icon(imageVector = Icons.Filled.DateRange, contentDescription = "")
+        Icon(imageVector = Icons.Filled.DateRange, contentDescription = "date picker")
         Spacer(modifier = Modifier.size(4.dp))
         Text(text = date, style = style)
     }

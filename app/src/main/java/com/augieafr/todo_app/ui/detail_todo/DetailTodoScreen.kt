@@ -22,6 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.augieafr.todo_app.ui.component.DateInfo
@@ -200,7 +201,8 @@ fun DetailTodoContent(
         TodoTransparentTextField(
             state = titleState,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag("title"),
             isEdit = isOnEdit,
             placeHolder = "Title",
             textFieldTextStyle = MaterialTheme.typography.titleLarge,
@@ -216,7 +218,8 @@ fun DetailTodoContent(
         TodoTransparentTextField(
             state = descriptionState,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag("description"),
             isEdit = isOnEdit,
             placeHolder = "Describe your todo here",
             textFieldTextStyle = MaterialTheme.typography.bodyMedium,

@@ -132,7 +132,8 @@ fun HomeScreenContent(
                             .fillMaxWidth()
                             .padding(16.dp)
                             .height(IntrinsicSize.Max)
-                            .animateItemPlacement(),
+                            .animateItemPlacement()
+                            .testTag("Todo"),
                         title = todo.title,
                         description = todo.description,
                         isDone = todo.isDone,
