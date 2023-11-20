@@ -55,7 +55,7 @@ fun DetailTodoScreen(
         val titleState = rememberTodoTextFieldState(todo.title)
         var dueDateState by rememberSaveable {
             mutableStateOf(
-                todo.dueDate
+                todo.deadLine.dueDate
             )
         }
         val descriptionState = rememberTodoTextFieldState(todo.description)
@@ -68,7 +68,7 @@ fun DetailTodoScreen(
         }
         val canUndo by remember(key1 = todoUiModel) {
             derivedStateOf {
-                todo.dueDate != dueDateState ||
+                todo.deadLine.dueDate != dueDateState ||
                         todo.title != titleState.text ||
                         todo.description != descriptionState.text
             }
@@ -120,7 +120,7 @@ fun DetailTodoScreen(
                     canUndo = canUndo,
                     hasError = hasError,
                     onUndoClicked = {
-                        dueDateState = todo.dueDate
+                        dueDateState = todo.deadLine.dueDate
                         titleState.text = todo.title
                         descriptionState.text = todo.description
                     },

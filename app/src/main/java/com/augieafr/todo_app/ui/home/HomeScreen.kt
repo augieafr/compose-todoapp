@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.augieafr.todo_app.ui.component.AddTodoDialog
 import com.augieafr.todo_app.ui.component.Todo
 import com.augieafr.todo_app.ui.component.TodoStickyHeader
 import com.augieafr.todo_app.ui.component.todo_appbar.TodoAppBar
@@ -36,43 +37,52 @@ import com.augieafr.todo_app.ui.navigation.Screen
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
     navigateToDetail: (Int) -> Unit,
     navigateToProfile: () -> Unit,
 ) {
     var isSearchBarActive by rememberSaveable {
         mutableStateOf(false)
     }
+    var isShowAddTodoDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Scaffold(modifier = modifier, topBar = {
         TodoAppBar(
             route = Screen.Home.route, isShowTitle = !isSearchBarActive, actions = {
                 Screen.Home.TopBarActions(
-                    query = viewModel.searchQuery.collectAsState().value,
+                    query = homeViewModel.searchQuery.collectAsState().value,
                     isSearchBarActive = isSearchBarActive,
-                    groupBy = viewModel.todoGroupBy.collectAsState().value,
+                    groupBy = homeViewModel.todoGroupBy.collectAsState().value,
                     onCancelSearch = { isSearchBarActive = !isSearchBarActive },
-                    onQueryChanged = { viewModel.setQuery(it) },
-                    onGroupByChanged = { viewModel.changeGroupBy() },
+                    onQueryChanged = { homeViewModel.setQuery(it) },
+                    onGroupByChanged = { homeViewModel.changeGroupBy() },
                     navigateToProfileScreen = { navigateToProfile() })
             }
         )
     }, floatingActionButton = {
         FloatingActionButton(onClick = {
-
+            isShowAddTodoDialog = true
         }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
         }
     }
     ) { paddingValues ->
-        val listTodo = viewModel.todoList.collectAsState(emptyMap())
+        val listTodo = homeViewModel.todoList.collectAsState(emptyMap())
+        if (isShowAddTodoDialog) AddTodoDialog(
+            onDismissDialog = { isShowAddTodoDialog = false },
+            onAddTodo = { title, description, dueDate ->
+                homeViewModel.addTodo(title, description, dueDate)
+            })
         HomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
             listTodo = listTodo.value,
-            onDeleteTodo = { viewModel.deleteTodo(it) },
+            onDeleteTodo = { homeViewModel.deleteTodo(it) },
             navigateToDetail = { navigateToDetail(it) },
-            onIsDoneClicked = { viewModel.setTodoIsDone(it) }
+            onIsDoneClicked = { homeViewModel.setTodoIsDone(it) }
         )
     }
 }
@@ -121,9 +131,9 @@ fun HomeScreenContent(
                         deadline = todo.deadLine,
                         onTodoEvent = { event ->
                             when (event) {
-                                HomeScreenEvent.Delete -> onDeleteTodo(todo)
-                                HomeScreenEvent.Detail -> navigateToDetail(todo.id)
-                                is HomeScreenEvent.Done -> onIsDoneClicked(todo.copy(isDone = event.isDone))
+                                TodoEvent.Delete -> onDeleteTodo(todo)
+                                TodoEvent.Detail -> navigateToDetail(todo.id)
+                                is TodoEvent.Done -> onIsDoneClicked(todo.copy(isDone = event.isDone))
                             }
                         }
                     )

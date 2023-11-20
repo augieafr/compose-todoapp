@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.augieafr.todo_app.data.repository.TodoRepository
 import com.augieafr.todo_app.ui.model.GroupBy
 import com.augieafr.todo_app.ui.model.TodoUiModel
+import com.augieafr.todo_app.utils.dueDateToDeadline
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -53,5 +54,17 @@ class HomeViewModel @Inject constructor(private val repository: TodoRepository) 
         } else {
             _todoGroupBy.value = GroupBy.IS_DONE
         }
+    }
+
+    fun addTodo(title: String, description: String, dueDate: String) = viewModelScope.launch {
+        repository.addEditTodo(
+            TodoUiModel(
+                id = 0,
+                title = title,
+                description = description,
+                deadLine = dueDateToDeadline(sourcePattern = "MMM dd, yyyy", dueDate = dueDate),
+                isDone = false
+            )
+        )
     }
 }

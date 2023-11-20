@@ -18,27 +18,23 @@ import java.util.Locale
 import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
-fun dueDateToDeadline(dueDate: String): ToDoDeadline {
-    val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+fun dueDateToDeadline(dueDate: String, sourcePattern: String = "yyyyMMdd"): ToDoDeadline {
+    val targetPattern = "MMM dd, yyyy"
+    val sdf = SimpleDateFormat(sourcePattern, Locale.getDefault())
     val currentDate = Date()
     val endDate = sdf.parse(dueDate)
 
     val timeLeft = (endDate?.time ?: 0) - currentDate.time
     val dayLeft = TimeUnit.MILLISECONDS.toDays(timeLeft)
+    val uiDueDate = if (sourcePattern == targetPattern) dueDate else dueDate.changeDatePattern(
+        sourcePattern,
+        targetPattern
+    )
     return when {
-        dayLeft <= 0 -> ToDoDeadline.NEAR("Due date has passed")
-        dayLeft < 3 -> ToDoDeadline.NEAR("$dayLeft days left")
-        dayLeft < 7 -> ToDoDeadline.MID("$dayLeft days left")
-        else -> {
-            ToDoDeadline.FAR(
-                "${
-                    endDate?.let {
-                        sdf.applyPattern("MMM dd, yyyy")
-                        sdf.format(endDate)
-                    }
-                }"
-            )
-        }
+        dayLeft <= 0 -> ToDoDeadline.NEAR("Due date has passed", uiDueDate)
+        dayLeft < 3 -> ToDoDeadline.NEAR("$dayLeft days left", uiDueDate)
+        dayLeft < 7 -> ToDoDeadline.MID("$dayLeft days left", uiDueDate)
+        else -> ToDoDeadline.FAR(uiDueDate, uiDueDate)
     }
 }
 

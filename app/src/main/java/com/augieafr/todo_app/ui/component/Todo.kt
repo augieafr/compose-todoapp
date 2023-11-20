@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.augieafr.todo_app.ui.home.HomeScreenEvent
+import com.augieafr.todo_app.ui.home.TodoEvent
 import com.augieafr.todo_app.ui.model.ToDoDeadline
 
 
@@ -40,7 +40,7 @@ fun Todo(
     isDone: Boolean,
     deadline: ToDoDeadline,
     modifier: Modifier = Modifier,
-    onTodoEvent: (HomeScreenEvent) -> Unit
+    onTodoEvent: (TodoEvent) -> Unit
 ) {
     val cardColor: Color
     val textColor: Color
@@ -61,7 +61,7 @@ fun Todo(
     }
 
     Card(
-        modifier = modifier.clickable { onTodoEvent(HomeScreenEvent.Detail) },
+        modifier = modifier.clickable { onTodoEvent(TodoEvent.Detail) },
         colors = CardDefaults.cardColors(
             containerColor = cardColor
         )
@@ -76,7 +76,7 @@ fun Todo(
             Checkbox(
                 modifier = Modifier.size(24.dp),
                 checked = isDone,
-                onCheckedChange = { onTodoEvent.invoke(HomeScreenEvent.Done(it)) })
+                onCheckedChange = { onTodoEvent.invoke(TodoEvent.Done(it)) })
             Spacer(modifier = Modifier.size(8.dp))
             VerticalDivider(
                 Modifier
@@ -100,7 +100,7 @@ fun Todo(
                 modifier = Modifier
                     .align(Alignment.Top)
                     .clickable {
-                        onTodoEvent.invoke(HomeScreenEvent.Delete)
+                        onTodoEvent.invoke(TodoEvent.Delete)
                     },
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete button",
@@ -131,7 +131,7 @@ fun TodoPreview() {
         title = "Preview Todo",
         description = "Preview description",
         isDone = false,
-        deadline = ToDoDeadline.FAR("1 Year left"),
+        deadline = ToDoDeadline.FAR("1 Year left", "Jan 1, 2022"),
         onTodoEvent = {
 
         }

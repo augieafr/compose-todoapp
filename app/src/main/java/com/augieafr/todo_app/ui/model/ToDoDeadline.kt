@@ -4,7 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 
-sealed class ToDoDeadline(val timeLeft: String) {
+sealed class ToDoDeadline(val timeLeft: String, val dueDate: String) {
     @Composable
     @ReadOnlyComposable
     fun getBackgroundColor() =
@@ -24,11 +24,11 @@ sealed class ToDoDeadline(val timeLeft: String) {
         }
 
     // due date still one week or more
-    class FAR(timeLeft: String) : ToDoDeadline(timeLeft)
+    class FAR(timeLeft: String, dueDate: String) : ToDoDeadline(timeLeft, dueDate)
 
     // due date less than one week
-    class MID(timeLeft: String) : ToDoDeadline(timeLeft)
+    class MID(timeLeft: String, dueDate: String) : ToDoDeadline(timeLeft, dueDate)
 
     // due date less than three days
-    class NEAR(timeLeft: String) : ToDoDeadline(timeLeft)
+    class NEAR(timeLeft: String, dueDate: String) : ToDoDeadline(timeLeft, dueDate)
 }
