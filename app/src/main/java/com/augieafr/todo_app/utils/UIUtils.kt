@@ -12,28 +12,31 @@ import com.augieafr.todo_app.ui.model.ToDoDeadline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
-import java.util.concurrent.TimeUnit
 
 fun dueDateToDeadline(dueDate: String, sourcePattern: String = "yyyyMMdd"): ToDoDeadline {
     val targetPattern = "MMM dd, yyyy"
     val sdf = SimpleDateFormat(sourcePattern, Locale.getDefault())
-    val currentDate = Date()
-    val endDate = sdf.parse(dueDate)
 
-    val timeLeft = (endDate?.time ?: 0) - currentDate.time + TimeZone.getDefault().rawOffset
-    val dayLeft = TimeUnit.MILLISECONDS.toDays(timeLeft)
+    val endDate = sdf.parse(dueDate)
+    val calendar = Calendar.getInstance()
+    if (endDate != null) {
+        calendar.time = endDate
+    }
+    val currentDate = LocalDate.now()
+    val dayOffset = calendar.get(Calendar.DAY_OF_MONTH) - currentDate.dayOfMonth
+
     val uiDueDate = if (sourcePattern == targetPattern) dueDate else dueDate.changeDatePattern(
         sourcePattern,
         targetPattern
     )
     return when {
-        dayLeft <= 0 -> ToDoDeadline.NEAR("Due date has passed", uiDueDate)
-        dayLeft < 3 -> ToDoDeadline.NEAR("$dayLeft days left", uiDueDate)
-        dayLeft < 7 -> ToDoDeadline.MID("$dayLeft days left", uiDueDate)
+        dayOffset <= 0 -> ToDoDeadline.NEAR("Due date has passed", uiDueDate)
+        dayOffset < 3 -> ToDoDeadline.NEAR("$dayOffset days left", uiDueDate)
+        dayOffset < 7 -> ToDoDeadline.MID("$dayOffset days left", uiDueDate)
         else -> ToDoDeadline.FAR(uiDueDate, uiDueDate)
     }
 }
