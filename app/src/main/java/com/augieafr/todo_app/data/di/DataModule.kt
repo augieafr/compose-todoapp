@@ -2,6 +2,8 @@ package com.augieafr.todo_app.data.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.augieafr.todo_app.data.dao.TodoDao
 import com.augieafr.todo_app.data.db.TodoDatabase
 import com.augieafr.todo_app.data.repository.TodoRepository
@@ -19,7 +21,14 @@ class DatabaseModule {
     @Provides
     @Singleton
     fun provideTodoDatabase(@ApplicationContext appContext: Context) =
-        Room.databaseBuilder(appContext, TodoDatabase::class.java, "todo_db").build()
+        Room.databaseBuilder(appContext, TodoDatabase::class.java, "todo_db")
+            .fallbackToDestructiveMigration()
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+
+                }
+            }).build()
 
     @Provides
     @Singleton

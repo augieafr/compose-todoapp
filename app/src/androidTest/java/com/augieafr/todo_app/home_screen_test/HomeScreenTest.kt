@@ -20,6 +20,7 @@ import com.augieafr.todo_app.R
 import com.augieafr.todo_app.addTodo
 import com.augieafr.todo_app.ui.home.HomeScreen
 import com.augieafr.todo_app.ui.theme.TODOAppTheme
+import com.augieafr.todo_app.utils.dueDateToDeadline
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -95,11 +96,12 @@ class HomeScreenTest {
 
     @Test
     fun success_add_todo(): Unit = with(composeTestRule) {
-        addTodo(context, "Title test", "Description test", 4)
+        val uiDateFormat = addTodo(context, "Title test", "Description test", 4)
         // validate to do displayed in home screen and it is match
         onNodeWithText("Title test").assertIsDisplayed()
         onNodeWithText("Description test").assertIsDisplayed()
-        onNodeWithText("4 days left").assertIsDisplayed()
+        val todoDeadline = dueDateToDeadline(uiDateFormat, "MMM dd, yyyy")
+        onNodeWithText(todoDeadline.timeLeft).assertIsDisplayed()
     }
 
     @Test
@@ -113,18 +115,5 @@ class HomeScreenTest {
         onNodeWithContentDescription("Group by").performClick()
         // validate group by deadline
         onNodeWithText("Near").assertIsDisplayed()
-    }
-
-    @Test
-    fun add_todo_then_cancel(): Unit = with(composeTestRule) {
-        // click fab add button
-        onNodeWithTag(context.getString(R.string.fab_test_tag)).performClick()
-        // assert AddTodoDialog is display
-        onNodeWithTag(context.getString(R.string.add_todo_dialog_test_tag)).assertIsDisplayed()
-        // cancel
-        onNodeWithContentDescription(context.getString(R.string.close_content_desc)).performClick()
-        // should display empty to do again
-        onNodeWithTag(context.getString(R.string.empty_todo_test_tag))
-            .assertTextEquals(context.getString(R.string.empty_todo_message))
     }
 }

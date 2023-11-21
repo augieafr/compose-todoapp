@@ -41,7 +41,7 @@ fun AndroidComposeTestRule<*, *>.addTodo(
     title: String,
     description: String,
     daysFromNow: Int
-) {
+): String {
     onNodeWithTag(context.getString(R.string.fab_test_tag)).performClick()
     onNodeWithText(context.getString(R.string.title_text_field_placeholder)).run {
         performTextInput(title)
@@ -50,6 +50,7 @@ fun AndroidComposeTestRule<*, *>.addTodo(
         performTextInput(description)
     }
     onNodeWithContentDescription(context.getString(R.string.open_date_picker_content_desc)).performClick()
-    addTodoDatePickerHelper(this, daysFromNow)
+    val uiDateFormat = addTodoDatePickerHelper(this, daysFromNow)
     onNodeWithTag(context.getString(R.string.add_button_test_tag)).performClick()
+    return uiDateFormat
 }
