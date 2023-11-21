@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -55,9 +54,9 @@ class MyProfileScreenKtTest {
         navController.assertCurrentRouteName(Screen.Profile.route)
         onNodeWithText("Augie Afriyansyah").assertIsDisplayed()
         onNodeWithText("An Associate Android Developer who loves to learn new things, gaming, and watching movies. Let's connect!").assertIsDisplayed()
-        onNodeWithContentDescription("github").isDisplayed()
-        onNodeWithContentDescription("linkedin").isDisplayed()
-        onNodeWithContentDescription("instagram").isDisplayed()
-        onNodeWithContentDescription("Profile Picture").isDisplayed()
+        onNodeWithContentDescription("github").assertIsDisplayed()
+        onNodeWithContentDescription("linkedin").assertIsDisplayed()
+        onNodeWithContentDescription("instagram").assertIsDisplayed()
+        onNodeWithContentDescription("Profile Picture").assertIsDisplayed()
     }
 }

@@ -7,7 +7,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -68,7 +67,7 @@ class DetailTodoScreenTest {
             performTextClearance()
             performTextInput("edited todo")
         }
-        onNodeWithContentDescription("Undo").isDisplayed()
+        onNodeWithContentDescription("Undo").assertIsDisplayed()
         onNodeWithTag("description").run {
             assertIsEnabled()
             performTextClearance()

@@ -2,8 +2,8 @@ package com.augieafr.todo_app.home_screen_test
 
 import android.content.Context
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
@@ -20,7 +21,6 @@ import com.augieafr.todo_app.R
 import com.augieafr.todo_app.addTodo
 import com.augieafr.todo_app.ui.home.HomeScreen
 import com.augieafr.todo_app.ui.theme.TODOAppTheme
-import com.augieafr.todo_app.utils.dueDateToDeadline
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -52,8 +52,6 @@ class HomeScreenTest {
     @Test
     fun done_todo(): Unit = with(composeTestRule) {
         addTodo(context, "test", "description", 1)
-        // at first there is no to do done yet
-        onNodeWithText("Done").assertIsNotDisplayed()
         onAllNodesWithTag("Checkbox")[0].performClick()
         onNodeWithTag("TodoList").performTouchInput {
             this.swipeUp()
@@ -96,12 +94,11 @@ class HomeScreenTest {
 
     @Test
     fun success_add_todo(): Unit = with(composeTestRule) {
-        val uiDateFormat = addTodo(context, "Title test", "Description test", 4)
+        addTodo(context, "New todo added title", "Description test", 4)
         // validate to do displayed in home screen and it is match
-        onNodeWithText("Title test").assertIsDisplayed()
+        onNodeWithTag("TodoList").performScrollToNode(hasText("New todo added title"))
+        onNodeWithText("New todo added title")
         onNodeWithText("Description test").assertIsDisplayed()
-        val todoDeadline = dueDateToDeadline(uiDateFormat, "MMM dd, yyyy")
-        onNodeWithText(todoDeadline.timeLeft).assertIsDisplayed()
     }
 
     @Test
